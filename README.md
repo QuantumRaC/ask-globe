@@ -1,31 +1,33 @@
 # ask-globe
 
-A Claude Code Skill (backed by a standalone CLI) that turns
-[NASA GLOBE Observer](https://observer.globe.gov/) citizen-science data --
+An LLM Agent Skill (backed by a standalone CLI) that fetches
+[NASA GLOBE Observer](https://observer.globe.gov/) citizen-science data (e.g.
 mosquito habitats, land cover, sky conditions, water quality, tree height,
-soil properties, and more -- into research-grade answers to natural-language
-questions.
+soil properties) and outputs answers to natural-language questions 
+for researchers.
 
-This is built as a **research tool**, not a trivia bot. Once installed, you
-ask your agent a question in plain language (e.g. *"has anyone logged
-mosquito breeding sites in the Philippines this year?"*) and it fetches real
-GLOBE data, prunes it down to what's scientifically relevant, and answers
+Ask your agent a question in plain language (e.g. *"has anyone logged
+mosquito breeding sites in the Philippines this year?"*) and it fetches
+GLOBE data, prunes it for context and performance optimization, and answers
 using the structured, quantified format defined in [SKILL.md](SKILL.md) --
 explicit sample sizes, calibrated hedging, and guardrails against common
 mistakes when reasoning about sparse, non-randomly-sampled crowdsourced data.
+You can always personalize your output preferences in [SKILL.md](SKILL.md).
 
-No external dependencies -- the CLI is pure Python standard library (`urllib`,
-`argparse`, `json`), so there's nothing to `pip install`.
+No external dependencies. This CLI is a Python standard library built With
+Python 3.8, developed with AI assistance.
 
-## What is GLOBE Observer?
+
+## Context - What is GLOBE Observer?
 
 [GLOBE Observer](https://observer.globe.gov/) is a NASA citizen-science program
 where volunteers worldwide submit environmental measurements via a mobile app.
-`ask-globe` queries this public dataset through GLOBE's REST API.
+`ask-globe` queries this public dataset in real time through GLOBE's REST API,
+addressing the time sensitivity of this active data source.
 
 ## Requirements
 
-- Python 3.8+ (standard library only)
+- Python 3.8+
 - An agent that supports custom skills/instructions + shell execution (e.g.
   [Claude Code](https://docs.claude.com/en/docs/claude-code/overview))
 
@@ -34,8 +36,8 @@ where volunteers worldwide submit environmental measurements via a mobile app.
 ### Claude Code
 
 Skills live in a `.claude/skills/<name>/` directory and are auto-discovered.
-Keep `SKILL.md`, `globe_fetcher.py`, and `locations.py` together in that
-directory -- the skill's instructions invoke the script by relative path.
+Keep `SKILL.md`, `globe_fetcher.py`, and `locations.py` together in this
+directory `ask-globe`. The skill's instructions invoke the script by relative path.
 
 **Option A -- project-level** (only available inside one project):
 
@@ -51,44 +53,35 @@ mkdir -p ~/.claude/skills
 git clone https://github.com/QuantumRaC/ask-globe.git ~/.claude/skills/ask-globe
 ```
 
-Then just start Claude Code and ask a GLOBE-related question -- e.g.:
-
-> What land cover measurements have been reported in the Alps in 2023?
-
-Claude Code will recognize the skill from its `description` frontmatter in
-`SKILL.md`, invoke `globe_fetcher.py`, and answer using the structured format
+Then start Claude Code and ask a GLOBE-related question. Claude Code will 
+recognize the skill from its `description` frontmatter in `SKILL.md`, 
+invoke `globe_fetcher.py`, and answer using the structured format
 (Summary Metrics / Key Observations / Data Limitations) that `SKILL.md`
-requires. You can confirm it's installed by asking Claude Code to list its
+requires. 
+
+You can confirm whether `ask-globe` is installed by asking Claude Code to list its
 available skills.
 
 ### Other agents
 
-`ask-globe` doesn't depend on any Claude-specific API, so any agent that can
-(1) read a markdown instructions file and (2) execute shell commands can use
-it:
-
-1. Clone this repo somewhere the agent can reach: `git clone https://github.com/QuantumRaC/ask-globe.git`
-2. Give the agent the contents of [SKILL.md](SKILL.md) as system/developer
-   instructions (or a tool description, depending on your framework).
-3. Grant the agent shell/exec access so it can run
-   `python globe_fetcher.py ...` from the cloned directory.
+`ask-globe` doesn't depend on any Claude-specific API, so any agent can use
+it as well.
 
 ## Example
 
 Once installed, a plain-language question like:
 
-> Has anyone reported mosquito breeding sites in the Philippines this June?
+> by how much has mosquito habitat records increased in the past 1 year in Florida?
 
 causes the agent to run something like:
 
 ```bash
-python globe_fetcher.py --protocol mosquito_habitat_mapper \
-    --start 2024-06-01 --end 2024-06-30 --country PHL
+python globe_fetcher.py --protocol mosquito_habitat_mapper --start 2025-08-28 --end 2026-08-28 --bbox 24.5,31.0,-87.6,-80.0 --full --summarize --pretty 
 ```
 
 and answer from the resulting JSON -- explicitly stating the spatial/temporal
-window it searched, and never concluding "no mosquitoes here" just because
-`total_matched` is low (see [SKILL.md](SKILL.md) for why).
+window it searched (and never concluding "no mosquitoes" just because
+`total_matched` is low). (see [SKILL.md](SKILL.md) for why).
 
 ## CLI reference
 
