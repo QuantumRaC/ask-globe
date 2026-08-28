@@ -6,8 +6,7 @@ mosquito habitats, land cover, sky conditions, water quality, tree height,
 soil properties) and outputs answers to natural-language questions 
 for researchers.
 
-Ask your agent a question in plain language (e.g. *"has anyone logged
-mosquito breeding sites in the Philippines this year?"*) and it fetches
+Ask your agent a question in plain language and it fetches
 GLOBE data, prunes it for context and performance optimization, and answers
 using the structured, quantified format defined in [SKILL.md](SKILL.md) --
 explicit sample sizes, calibrated hedging, and guardrails against common
