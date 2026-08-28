@@ -1,7 +1,7 @@
 # ask-globe
 
-An LLM Agent Skill (backed by a standalone CLI) that fetches
-[NASA GLOBE Observer](https://observer.globe.gov/) citizen-science data (e.g.
+An LLM Skill (backed by a standalone CLI) that fetches crowdsourced
+[GLOBE Observer](https://observer.globe.gov/) citizen-science data (e.g.
 mosquito habitats, land cover, sky conditions, water quality, tree height,
 soil properties) and outputs answers to natural-language questions 
 for researchers.
