@@ -1,0 +1,9 @@
+# Local Claude Code settings (machine-specific permissions)
+.claude/
+
+# Python
+__pycache__/
+*.pyc
+
+# Ad-hoc output from running globe_fetcher.py / test_run.py locally
+*.local.json

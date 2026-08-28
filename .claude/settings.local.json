@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s \"https://api.globe.gov/search/v1/measurement/protocol/measureddatato/json?protocols=mosquito_habitat_mapper&startdate=2024-06-01&enddate=2024-06-07&geojson=FALSE&sample=TRUE\" -o /tmp/globe_sample_plain.json -w \"HTTP %{http_code}, size: %{size_download} bytes\\\\n\")",
+      "WebFetch(domain:en.wikipedia.org)",
+      "WebFetch(domain:nominatim.openstreetmap.org)",
+      "Bash(ls -la .claude)",
+      "Bash(ls -la .claude/skills)",
+      "Bash(find . -iname \"SKILL.md\")"
+    ]
+  }
+}
